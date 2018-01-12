@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+#test file amd Makefile
+test.cpp
+Makefile
