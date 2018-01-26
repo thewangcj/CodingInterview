@@ -24,3 +24,20 @@ void PrintList(ListNode* const list) {
   }
   cout<<endl;
 }
+
+void DestroyList(ListNode* list) {
+  ListNode* p = list;
+  while (p != NULL) {
+    list = list->next;
+    delete p;
+    p = list;
+  }
+}
+
+void PrintListNode(ListNode* list_node) {
+  if(list_node == NULL) {
+    cout<< "The node is null" << endl;
+  } else {
+    cout<< "The key in node is " << list_node->value << endl;
+  }
+}

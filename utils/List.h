@@ -13,5 +13,7 @@ struct ListNode{
 ListNode* CreateListNode(int value);
 void ConnectListNodes (ListNode* p_current, ListNode* p_next);
 void PrintList(ListNode* const list);
+void DestroyList(ListNode* list);
+void PrintListNode(ListNode* list_node);
 
 #endif
