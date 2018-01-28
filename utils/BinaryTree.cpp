@@ -10,9 +10,9 @@ BinaryTreeNode* CreateBiTreeNode(const int value) {
 
 void PrintBinTreeNode(const BinaryTreeNode* node) {
   if (node != NULL) {
-    std::cout << node->value << '\n';
+    std::cout << node->value << ' ';
   } else {
-    std::cout << "node is null" << '\n';
+    std::cout << " node is null ";
   }
 }
 
@@ -36,5 +36,12 @@ void DestoryBinTree(BinaryTreeNode* tree) {
     tree = NULL;
     DestoryBinTree(left);
     DestoryBinTree(right);
+  }
+}
+
+void ConnectBinTreeNodes(BinaryTreeNode* parent, BinaryTreeNode* left_child, BinaryTreeNode* right_child){
+  if( parent != NULL){
+    parent->left = left_child;
+    parent->right = right_child;
   }
 }
