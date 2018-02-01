@@ -40,11 +40,11 @@ double Power(double base, int exponent)
 
 void Test(const char* testName, double base, int exponent, double expected_result, bool expected_flag)
 {
-    double result = Power(base, exponent);
-    if (equal(result, expected_result) && g_invalid_input == expected_flag)
-      cout << testName << " passed" << std::endl;
-    else
-      cout << testName << " FAILED" << std::endl;
+  double result = Power(base, exponent);
+  if (equal(result, expected_result) && g_invalid_input == expected_flag)
+    cout << testName << " passed" << std::endl;
+  else
+    cout << testName << " FAILED" << std::endl;
 }
 
 int main(int argc, char const *argv[]) {
