@@ -1,37 +1,90 @@
-// 不分行从上往下打印二叉树
-// 题目：从上往下打印出二叉树的每个结点，同一层的结点按照从左到右的顺序打印。
-#include "./utils/BinaryTree.h"
-#include <iostream>
-#include <deque>
+// 二叉搜索树与双向链表
+// 题目：输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求
+// 不能创建任何新的结点，只能调整树中结点指针的指向。
 
-void LevelTraversalBInTree(BinaryTreeNode* tree) {
-	if(!tree)
+#include <iostream>
+#include "./utils/BinaryTree.h"
+using namespace std;
+
+void ConvertNode(BinaryTreeNode* node, BinaryTreeNode** last) {
+	if(node == NULL)
 		return;
-	deque<BinaryTreeNode*> bin_tree_deque;
-	bin_tree_deque.push_back(tree);
-	while(bin_tree_deque.size()) {
-		BinaryTreeNode* p = bin_tree_deque.front();
-		bin_tree_deque.pop_front();
-		cout<<p->value<<' ';
-		if(p->left)
-			bin_tree_deque.push_back(p->left);
-		if(p->right)
-			bin_tree_deque.push_back(p->right);
+
+	BinaryTreeNode* current = node;
+	if(current->left != NULL)
+		ConvertNode(current->left, last);
+
+	current->left = *last;
+
+	if(*last != NULL)
+		(*last)->right = current;
+
+	*last = current;
+
+	if(current->right != NULL)
+		ConvertNode(current->right, last);
+}
+
+BinaryTreeNode* Convert(BinaryTreeNode* Tree) {
+	BinaryTreeNode* last = NULL;
+	ConvertNode(Tree, &last);
+	BinaryTreeNode* list = last;
+	while(list != NULL && list->left != NULL) {
+		list = list->left;
 	}
+	return list;
 }
 
 // ====================测试代码====================
-void Test(const char* testName, BinaryTreeNode* pRoot)
+void PrintDoubleLinkedList(BinaryTreeNode* pHeadOfList)
+{
+  BinaryTreeNode* pNode = pHeadOfList;
+
+  printf("The nodes from left to right are:\n");
+  while(pNode != NULL)
+  {
+    printf("%d\t", pNode->value);
+
+    if(pNode->right == NULL)
+      break;
+    pNode = pNode->right;
+  }
+
+  printf("\nThe nodes from right to left are:\n");
+  while(pNode != NULL)
+  {
+    printf("%d\t", pNode->value);
+
+    if(pNode->left == NULL)
+      break;
+    pNode = pNode->left;
+  }
+
+  printf("\n");
+}
+
+void DestroyList(BinaryTreeNode* pHeadOfList)
+{
+  BinaryTreeNode* pNode = pHeadOfList;
+  while(pNode != NULL)
+  {
+    BinaryTreeNode* pNext = pNode->right;
+
+    delete pNode;
+    pNode = pNext;
+  }
+}
+
+void Test(const char* testName, BinaryTreeNode* pRootOfTree)
 {
   if(testName != NULL)
-      printf("%s begins: \n", testName);
+    printf("%s begins:\n", testName);
 
-  PrintBinTree(pRoot);
+  PrintBinTree(pRootOfTree);
 
-  printf("The nodes from top to bottom, from left to right are: \n");
-  LevelTraversalBInTree(pRoot);
+  BinaryTreeNode* pHeadOfList = Convert(pRootOfTree);
 
-  printf("\n\n");
+  PrintDoubleLinkedList(pHeadOfList);
 }
 
 //            10
@@ -55,7 +108,7 @@ void Test1()
 
   Test("Test1", pNode10);
 
-  DestoryBinTree(pNode10);
+  DestroyList(pNode4);
 }
 
 //               5
@@ -82,7 +135,7 @@ void Test2()
 
   Test("Test2", pNode5);
 
-  DestoryBinTree(pNode5);
+  DestroyList(pNode1);
 }
 
 // 1
@@ -109,7 +162,7 @@ void Test3()
 
   Test("Test3", pNode1);
 
-  DestoryBinTree(pNode1);
+  DestroyList(pNode1);
 }
 
 // 树中只有1个结点
@@ -118,7 +171,7 @@ void Test4()
   BinaryTreeNode* pNode1 = CreateBiTreeNode(1);
   Test("Test4", pNode1);
 
-  DestoryBinTree(pNode1);
+  DestroyList(pNode1);
 }
 
 // 树中没有结点
@@ -135,5 +188,5 @@ int main(int argc, char* argv[])
   Test4();
   Test5();
 
- 	return 0;	
+  return 0;
 }
