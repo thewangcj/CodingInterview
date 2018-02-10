@@ -9,7 +9,7 @@ void Permutation(char* str, char* begin) {
 	if(str == NULL)
 		return;
 	else if(*begin == '\0')
-		cout<<str<<endl;
+		cout<< str << endl;
 	else {
 		for(char* ch = begin; *ch != '\0'; ++ch) {
 			char temp = *ch;
