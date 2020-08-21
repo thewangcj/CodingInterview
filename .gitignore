@@ -33,4 +33,6 @@
 
 #test file amd Makefile
 test.cpp
-Makefile
+
+#editor
+.vscode
