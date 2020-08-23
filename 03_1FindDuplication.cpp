@@ -7,7 +7,7 @@
 using namespace std;
 
 bool find_duplication(int *numbers, int length, int *duplication)
-{                                                                                                                       
+{
 	if (numbers == nullptr || length < 0)
 		return false;
 	for (int i = 0; i < length; i++)

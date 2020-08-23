@@ -26,7 +26,7 @@ int get_duplication(const int *numbers, int length)
   {
     int middle = ((end - start) >> 1) + start;
     int count = count_range(numbers, length, start, middle);
-    if (end == start)
+    if (end == start) // 比如 n = 2，{2， 2， 2,}
     {
       if (count > 1)
         return start;
