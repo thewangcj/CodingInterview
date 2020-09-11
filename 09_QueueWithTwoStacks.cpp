@@ -5,42 +5,54 @@
 #include <stack>
 using namespace std;
 
-template <typename T> class MyQueue
+template <typename T>
+class MyQueue
 {
 public:
   MyQueue(void);
   ~MyQueue(void);
-  void appendTail(const T& node);
+  void appendTail(const T &node);
   T deleteHead();
+
 private:
   stack<T> stack1;
   stack<T> stack2;
 };
-template<typename T> MyQueue<T>::MyQueue(){}
-template<typename T> MyQueue<T>::~MyQueue(){}
+template <typename T>
+MyQueue<T>::MyQueue() {}
+template <typename T>
+MyQueue<T>::~MyQueue() {}
 
-template<typename T> void MyQueue<T>::appendTail(const T& node) {
+template <typename T>
+void MyQueue<T>::appendTail(const T &node)
+{
   stack1.push(node);
 }
 
-template<typename T> T MyQueue<T>::deleteHead() {
-  if(stack2.size() <= 0) {
-    while (stack1.size() > 0) {
+template <typename T>
+T MyQueue<T>::deleteHead()
+{
+  if (stack2.size() <= 0)
+  {
+    while (stack1.size() > 0)
+    {
       T data = stack1.top();
       stack1.pop();
       stack2.push(data);
     }
   }
-  if(stack2.size() == 0) {
+  if (stack2.size() == 0)
+  {
     std::cout << "queue is empty" << '\n';
+    return 0;
   }
   T head = stack2.top();
   stack2.pop();
   return head;
 }
 
-
-int main(int argc, char const *argv[]) {
+int main(int argc, char const *argv[])
+{
   MyQueue<int> queue;
   queue.appendTail(1);
   queue.appendTail(2);

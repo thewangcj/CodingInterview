@@ -9,63 +9,75 @@
 #include <cstdlib>
 using namespace std;
 
-BinaryTreeNode* ConstructBinaryTree(int* start_pre, int* end_pre, int* start_in ,int* end_in) {
+BinaryTreeNode *ConstructBinaryTree(int *start_pre, int *end_pre, int *start_in, int *end_in)
+{
   int root_value = start_pre[0];
-  BinaryTreeNode* root = CreateBiTreeNode(root_value);
+  BinaryTreeNode *root = CreateBiTreeNode(root_value);
 
-  if(start_pre == end_pre) {
-    if(start_in == end_in && *start_pre == *start_in) {
+  if (start_pre == end_pre)
+  {
+    if (start_in == end_in && *start_pre == *start_in)
+    {
       return root;
-    } else {
+    }
+    else
+    {
       std::cout << "Invalid input" << '\n';
       exit(0);
     }
   }
 
-  int* root_in = start_in;
-  while (root_in <= end_in && *root_in != root_value) {
+  int *root_in = start_in;
+  while (root_in <= end_in && *root_in != root_value)
+  {
     root_in++;
   }
-  if(root_in ==  end_in && *root_in != root_value){
+  if (root_in == end_in && *root_in != root_value)
+  {
     std::cout << "Invalid input" << '\n';
     exit(0);
   }
 
   int left_len = root_in - start_in;
-  if(left_len > 0) {
+  if (left_len > 0)
+  {
     root->left = ConstructBinaryTree(start_pre + 1, start_pre + left_len, start_in, root_in - 1);
   }
-  if (left_len < end_pre - start_pre) {
+  if (left_len < end_pre - start_pre)
+  {
     root->right = ConstructBinaryTree(start_pre + left_len + 1, end_pre, root_in + 1, end_in);
   }
   return root;
 }
 
-BinaryTreeNode* Construct(int* pre_order, int* in_order, int length) {
-  if(pre_order == NULL || in_order == NULL || length < 0) {
-    return NULL;
+BinaryTreeNode *Construct(int *pre_order, int *in_order, int length)
+{
+  if (pre_order == nullptr || in_order == nullptr || length < 0)
+  {
+    return nullptr;
   }
-  return ConstructBinaryTree(pre_order, pre_order + length -1, in_order, in_order + length -1);
+  return ConstructBinaryTree(pre_order, pre_order + length - 1, in_order, in_order + length - 1);
 }
 
 // ====================测试代码====================
-void Test(const char* testName, int* preorder, int* inorder, int length)
+void Test(const char *testName, int *preorder, int *inorder, int length)
 {
-  if(testName != NULL)
-    cout<< testName <<": ";
+  if (testName != nullptr)
+    cout << testName << ": ";
 
-  cout<< "The preorder sequence is: " ;
-  for(int i = 0; i < length; ++ i)
-    cout<< preorder[i] << ' ';
-  cout<<endl;
+  cout << "The preorder sequence is: ";
+  for (int i = 0; i < length; ++i)
+    cout << preorder[i] << ' ';
+  cout << endl;
 
-  cout<< "The inorder sequence is: " ;
-  for(int i = 0; i < length; ++ i)
-    cout<< inorder[i] << ' ';
-  cout<<endl;
+  cout << "The inorder sequence is: ";
+  for (int i = 0; i < length; ++i)
+    cout << inorder[i] << ' ';
+  cout << endl;
 
-  BinaryTreeNode* root = Construct(preorder, inorder, length);
+  BinaryTreeNode *root = Construct(preorder, inorder, length);
   PrintBinTree(root);
+  cout << endl;
   DestoryBinTree(root);
 }
 
@@ -144,7 +156,7 @@ void Test5()
 // 输入空指针
 void Test6()
 {
-  Test("Test6", NULL, NULL, 0);
+  Test("Test6", nullptr, nullptr, 0);
 }
 
 // 输入的两个序列不匹配
@@ -157,7 +169,8 @@ void Test7()
   Test("Test7: for unmatched input", preorder, inorder, length);
 }
 
-int main(int argc, char const *argv[]) {
+int main(int argc, char const *argv[])
+{
   Test1();
   Test2();
   Test3();

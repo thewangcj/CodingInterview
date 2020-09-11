@@ -1,46 +1,59 @@
 #include "BinaryTree.h"
 
-BinaryTreeNode* CreateBiTreeNode(const int value) {
-  BinaryTreeNode* node = new BinaryTreeNode();
+BinaryTreeNode *CreateBiTreeNode(const int value)
+{
+  BinaryTreeNode *node = new BinaryTreeNode();
   node->value = value;
-  node->left = NULL;
-  node->right = NULL;
+  node->left = nullptr;
+  node->right = nullptr;
   return node;
 }
 
-void PrintBinTreeNode(const BinaryTreeNode* node) {
-  if (node != NULL) {
+void PrintBinTreeNode(const BinaryTreeNode *node)
+{
+  if (node != nullptr)
+  {
     std::cout << node->value << ' ';
-  } else {
+  }
+  else
+  {
     std::cout << " node is null ";
   }
 }
 
-void PrintBinTree(const BinaryTreeNode* tree) {
+void PrintBinTree(const BinaryTreeNode *tree)
+{
   PrintBinTreeNode(tree);
-  if(tree != NULL){
-    if(tree->left != NULL){
+  if (tree != nullptr)
+  {
+    if (tree->left != nullptr)
+    {
       PrintBinTree(tree->left);
     }
-    if(tree->right != NULL){
+    if (tree->right != nullptr)
+    {
       PrintBinTree(tree->right);
     }
   }
 }
 
-void DestoryBinTree(BinaryTreeNode* tree) {
-  if(tree != NULL){
-    BinaryTreeNode* left = tree->left;
-    BinaryTreeNode* right = tree->right;
+void DestoryBinTree(BinaryTreeNode *tree)
+{
+  if (tree != nullptr)
+  {
+    BinaryTreeNode *left = tree->left;
+    BinaryTreeNode *right = tree->right;
     delete tree;
-    tree = NULL;
+    tree = nullptr;
     DestoryBinTree(left);
     DestoryBinTree(right);
   }
 }
 
-void ConnectBinTreeNodes(BinaryTreeNode* parent, BinaryTreeNode* left_child, BinaryTreeNode* right_child){
-  if( parent != NULL){
+void ConnectBinTreeNodes(BinaryTreeNode *parent, BinaryTreeNode *left_child, BinaryTreeNode *right_child)
+{
+  if (parent != nullptr)
+  {
     parent->left = left_child;
     parent->right = right_child;
   }
