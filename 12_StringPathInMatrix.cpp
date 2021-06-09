@@ -76,9 +76,9 @@ void Test(const char *testName, const char *matrix, int rows, int cols, const ch
     printf("FAILED.\n");
 }
 
-//ABTG
-//CFCS
-//JDEH
+// ABTG
+// CFCS
+// JDEH
 
 //BFCE
 void Test1()
@@ -89,9 +89,9 @@ void Test1()
   Test("Test1", (const char *)matrix, 3, 4, str, true);
 }
 
-//ABCE
-//SFCS
-//ADEE
+// ABCE
+// SFCS
+// ADEE
 
 //SEE
 void Test2()
@@ -102,9 +102,9 @@ void Test2()
   Test("Test2", (const char *)matrix, 3, 4, str, true);
 }
 
-//ABTG
-//CFCS
-//JDEH
+// ABTG
+// CFCS
+// JDEH
 
 //ABFB
 void Test3()
@@ -115,13 +115,13 @@ void Test3()
   Test("Test3", (const char *)matrix, 3, 4, str, false);
 }
 
-//ABCEHJIG
-//SFCSLOPQ
-//ADEEMNOE
-//ADIDEJFM
-//VCEIFGGS
+// ABCEHJIG
+// SFCSLOPQ
+// ADEEMNOE
+// ADIDEJFM
+// VCEIFGGS
 
-//SLHECCEIDEJFGGFIE
+// SLHECCEIDEJFGGFIE
 void Test4()
 {
   const char *matrix = "ABCEHJIGSFCSLOPQADEEMNOEADIDEJFMVCEIFGGS";
@@ -130,13 +130,13 @@ void Test4()
   Test("Test4", (const char *)matrix, 5, 8, str, true);
 }
 
-//ABCEHJIG
-//SFCSLOPQ
-//ADEEMNOE
-//ADIDEJFM
-//VCEIFGGS
+// ABCEHJIG
+// SFCSLOPQ
+// ADEEMNOE
+// ADIDEJFM
+// VCEIFGGS
 
-//SGGFIECVAASABCEHJIGQEM
+// SGGFIECVAASABCEHJIGQEM
 void Test5()
 {
   const char *matrix = "ABCEHJIGSFCSLOPQADEEMNOEADIDEJFMVCEIFGGS";
@@ -145,13 +145,13 @@ void Test5()
   Test("Test5", (const char *)matrix, 5, 8, str, true);
 }
 
-//ABCEHJIG
-//SFCSLOPQ
-//ADEEMNOE
-//ADIDEJFM
-//VCEIFGGS
+// ABCEHJIG
+// SFCSLOPQ
+// ADEEMNOE
+// ADIDEJFM
+// VCEIFGGS
 
-//SGGFIECVAASABCEEJIGOEM
+// SGGFIECVAASABCEEJIGOEM
 void Test6()
 {
   const char *matrix = "ABCEHJIGSFCSLOPQADEEMNOEADIDEJFMVCEIFGGS";
@@ -160,13 +160,13 @@ void Test6()
   Test("Test6", (const char *)matrix, 5, 8, str, false);
 }
 
-//ABCEHJIG
-//SFCSLOPQ
-//ADEEMNOE
-//ADIDEJFM
-//VCEIFGGS
+// ABCEHJIG
+// SFCSLOPQ
+// ADEEMNOE
+// ADIDEJFM
+// VCEIFGGS
 
-//SGGFIECVAASABCEHJIGQEMS
+// SGGFIECVAASABCEHJIGQEMS
 void Test7()
 {
   const char *matrix = "ABCEHJIGSFCSLOPQADEEMNOEADIDEJFMVCEIFGGS";
@@ -175,11 +175,11 @@ void Test7()
   Test("Test7", (const char *)matrix, 5, 8, str, false);
 }
 
-//AAAA
-//AAAA
-//AAAA
+// AAAA
+// AAAA
+// AAAA
 
-//AAAAAAAAAAAA
+// AAAAAAAAAAAA
 void Test8()
 {
   const char *matrix = "AAAAAAAAAAAA";
@@ -188,11 +188,11 @@ void Test8()
   Test("Test8", (const char *)matrix, 3, 4, str, true);
 }
 
-//AAAA
-//AAAA
-//AAAA
+// AAAA
+// AAAA
+// AAAA
 
-//AAAAAAAAAAAAA
+// AAAAAAAAAAAAA
 void Test9()
 {
   const char *matrix = "AAAAAAAAAAAA";
@@ -201,9 +201,9 @@ void Test9()
   Test("Test9", (const char *)matrix, 3, 4, str, false);
 }
 
-//A
+// A
 
-//A
+// A
 void Test10()
 {
   const char *matrix = "A";
@@ -212,9 +212,9 @@ void Test10()
   Test("Test10", (const char *)matrix, 1, 1, str, true);
 }
 
-//A
+// A
 
-//B
+// B
 void Test11()
 {
   const char *matrix = "A";
