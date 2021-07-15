@@ -13,23 +13,27 @@
 所以返回 [0, 1]
 
 */
-#include<iostream>
-#include<algorithm>
-#include<vector>
-#include<iterator>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <iterator>
 using namespace std;
 
-class Solution {
+class Solution
+{
 public:
-    vector<int> twoSum(vector<int>& nums, int target) {
+    vector<int> twoSum(vector<int> &nums, int target)
+    {
         vector<int>::iterator iter;
         vector<int>::iterator res;
 
-        for(iter = nums.begin(); iter != nums.end(); iter++){
+        for (iter = nums.begin(); iter != nums.end(); iter++)
+        {
             cout << *iter << " ";
             res = find(iter + 1, nums.end(), target - *iter);
 
-            if(res != nums.end()) {
+            if (res != nums.end())
+            {
                 cout << "found" << endl;
                 return vector<int>{(int)(iter - nums.begin()), (int)(res - nums.begin())};
             };
@@ -41,11 +45,11 @@ public:
 int main()
 {
     Solution s = Solution();
-    vector<int>test1{3,2,4};
+    vector<int> test1{3, 2, 4};
     vector<int> res = s.twoSum(test1, 6);
     vector<int>::iterator iter;
     cout << endl;
-    for(iter = res.begin(); iter != res.end(); iter++)
+    for (iter = res.begin(); iter != res.end(); iter++)
         cout << *iter << " ";
 
     // vector<int>test2{10,11,13,14,5,6};

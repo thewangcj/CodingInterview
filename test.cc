@@ -6,6 +6,6 @@ int main()
 {
     int a = 9;
     int b = 10;
-    double sum = (double)a/(double)b;
-    cout << (sum > 0.8) <<endl;
+    double sum = (double)a / (double)b;
+    cout << (sum > 0.8) << endl;
 }

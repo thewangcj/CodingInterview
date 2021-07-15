@@ -48,6 +48,7 @@ test.cpp
 
 # User-specific stuff
 .idea/**/workspace.xml
+.idea/**/deployment.xml
 .idea/**/tasks.xml
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
