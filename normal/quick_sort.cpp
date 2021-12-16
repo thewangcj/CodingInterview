@@ -65,7 +65,6 @@ void output(int l, int x, int r) {
     if (!DEBUG) return ;
     printf("\n待排序区间范围 [%d, %d]\n", l, r);
     printf("基准值：%d\n", arr[x]);
-    
     char str[30];
     int cnt = 1;
     for (int i = 1; i < x; i++) {
