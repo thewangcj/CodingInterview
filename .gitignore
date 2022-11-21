@@ -4,3 +4,6 @@
 
 *.o
 *.exe
+
+.clangd
+compile_commands.json
