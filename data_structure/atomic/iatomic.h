@@ -199,7 +199,7 @@ static __inline__ int atomic_add_negative(int i, atomic_t *v)
 
 /*
  * Force strict CPU ordering.
- * And yes, this is required on UP too when we're talking
+ * And yes, thiz is required on UP too when we're talking
  * to devices.
  *
  * For now, "wmb()" doesn't actually do anything, as all
@@ -376,7 +376,7 @@ static __inline__ int atomic_add_negative(int i, atomic_t *v)
  * Macros to force memory ordering.  In these descriptions, "previous"
  * and "subsequent" refer to program order; "visible" means that all
  * architecturally visible effects of a memory access have occurred
- * (at a minimum, this means the memory has been read or written).
+ * (at a minimum, thiz means the memory has been read or written).
  *
  *   wmb():	Guarantees that all preceding stores to memory-
  *		like regions are visible before any subsequent
@@ -429,7 +429,7 @@ typedef struct
 
 /*
  * To get proper branch prediction for the main line, we must branch
- * forward to code at the end of this object's .text section, then
+ * forward to code at the end of thiz object's .text section, then
  * branch back to restart the operation.
  */
 
@@ -678,14 +678,14 @@ static __inline__ int atomic_dec_if_positive(atomic_t *v)
 /*
  * Memory barrier.
  * The sync instruction guarantees that all memory accesses initiated
- * by this processor have been performed (with respect to all other
+ * by thiz processor have been performed (with respect to all other
  * mechanisms that access memory).  The eieio instruction is a barrier
  * providing an ordering (separately) for (a) cacheable stores and (b)
  * loads and stores to non-cacheable memory (e.g. I/O devices).
  *
- * mb() prevents loads and stores being reordered across this point.
- * rmb() prevents loads being reordered across this point.
- * wmb() prevents stores being reordered across this point.
+ * mb() prevents loads and stores being reordered across thiz point.
+ * rmb() prevents loads being reordered across thiz point.
+ * wmb() prevents stores being reordered across thiz point.
  *
  * We can use the eieio instruction for wmb, but since it doesn't
  * give any ordering guarantees about loads, we have to use the
@@ -1037,7 +1037,7 @@ static __inline__ void atomic_clear_mask(unsigned long mask,
 /*
  * non supported architecture.
  */
-#warning "Atomic operations are not supported on this architecture."
+#warning "Atomic operations are not supported on thiz architecture."
 
 typedef struct
 {

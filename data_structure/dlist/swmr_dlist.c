@@ -28,19 +28,19 @@ typedef struct _Swmrd_list
     d_list *dlists[2];
 } Swmrd_list;
 
-void swmr_dlist_destroy(Swmrd_list *this);
+void swmr_dlist_destroy(Swmrd_list *thiz);
 
 Swmrd_list *swmr_dlist_create(data_destroy_func data_destroy, void *ctx)
 {
     Ret ret          = RET_FAIL;
-    Swmrd_list *this = (Swmrd_list *)calloc(1, sizeof(Swmrd_list));
+    Swmrd_list *thiz = (Swmrd_list *)calloc(1, sizeof(Swmrd_list));
 
     do {
-        if ((this->dlists[0] = dlist_create(data_destroy, ctx)) == NULL) {
+        if ((thiz->dlists[0] = dlist_create(data_destroy, ctx)) == NULL) {
             break;
         }
 
-        if ((this->dlists[1] = dlist_create(data_destroy, ctx)) == NULL) {
+        if ((thiz->dlists[1] = dlist_create(data_destroy, ctx)) == NULL) {
             break;
         }
 
@@ -48,93 +48,93 @@ Swmrd_list *swmr_dlist_create(data_destroy_func data_destroy, void *ctx)
     } while (0);
 
     if (ret != RET_OK) {
-        swmr_dlist_destroy(this);
-        this = NULL;
+        swmr_dlist_destroy(thiz);
+        thiz = NULL;
     }
 
-    return this;
+    return thiz;
 }
 
-void swmr_dlist_destroy(Swmrd_list *this)
+void swmr_dlist_destroy(Swmrd_list *thiz)
 {
-    if (this != NULL) {
-        if (this->dlists != NULL) {
-            dlist_destroy(this->dlists[0]);
-            dlist_destroy(this->dlists[1]);
-            this->dlists[0] = NULL;
-            this->dlists[1] = NULL;
+    if (thiz != NULL) {
+        if (thiz->dlists != NULL) {
+            dlist_destroy(thiz->dlists[0]);
+            dlist_destroy(thiz->dlists[1]);
+            thiz->dlists[0] = NULL;
+            thiz->dlists[1] = NULL;
         }
-        free(this);
+        free(thiz);
     }
 
     return;
 }
 
-int swmr_dlist_find(Swmrd_list *this, data_cmp_fun cmp, void *ctx)
+int swmr_dlist_find(Swmrd_list *thiz, data_cmp_fun cmp, void *ctx)
 {
     int ret = 0;
-    return_val_if_fail(this != NULL && this->dlists != NULL, -1);
+    return_val_if_fail(thiz != NULL && thiz->dlists != NULL, -1);
 
-    atomic_inc(&(this->rd_index_and_ref));
-    size_t rd_index = (this->rd_index_and_ref.counter >> 24) & 0x1;
-    ret             = dlist_find(this->dlists[rd_index], cmp, ctx);
-    atomic_dec(&(this->rd_index_and_ref));
+    atomic_inc(&(thiz->rd_index_and_ref));
+    size_t rd_index = (thiz->rd_index_and_ref.counter >> 24) & 0x1;
+    ret             = dlist_find(thiz->dlists[rd_index], cmp, ctx);
+    atomic_dec(&(thiz->rd_index_and_ref));
 
     return ret;
 }
 
-int swmr_dlist_length(Swmrd_list *this)
+int swmr_dlist_length(Swmrd_list *thiz)
 {
     int ret = 0;
-    return_val_if_fail(this != NULL && this->dlists != NULL, -1);
+    return_val_if_fail(thiz != NULL && thiz->dlists != NULL, -1);
 
-    atomic_inc(&(this->rd_index_and_ref));
-    size_t rd_index = (this->rd_index_and_ref.counter >> 24) & 0x1;
-    ret             = dlist_length(this->dlists[rd_index]);
-    atomic_dec(&(this->rd_index_and_ref));
+    atomic_inc(&(thiz->rd_index_and_ref));
+    size_t rd_index = (thiz->rd_index_and_ref.counter >> 24) & 0x1;
+    ret             = dlist_length(thiz->dlists[rd_index]);
+    atomic_dec(&(thiz->rd_index_and_ref));
 
     return ret;
 }
 
-Ret swmr_dlist_insert(Swmrd_list *this, size_t index, void *data)
+Ret swmr_dlist_insert(Swmrd_list *thiz, size_t index, void *data)
 {
     Ret ret          = RET_FAIL;
     d_list *wr_dlist = NULL;
-    return_val_if_fail(this != NULL && this->dlists != NULL, ret);
+    return_val_if_fail(thiz != NULL && thiz->dlists != NULL, ret);
 
-    size_t wr_index = !((this->rd_index_and_ref.counter >> 24) & 0x1);
-    if ((ret = dlist_insert(this->dlists[wr_index], index, data)) == RET_OK) {
-        int rd_index_old = this->rd_index_and_ref.counter & 0xFF000000;
+    size_t wr_index = !((thiz->rd_index_and_ref.counter >> 24) & 0x1);
+    if ((ret = dlist_insert(thiz->dlists[wr_index], index, data)) == RET_OK) {
+        int rd_index_old = thiz->rd_index_and_ref.counter & 0xFF000000;
         int rd_index_new = wr_index << 24;
 
         do {
             usleep(100);
-        } while (CAS(&(this->rd_index_and_ref), rd_index_old, rd_index_new));
+        } while (CAS(&(thiz->rd_index_and_ref), rd_index_old, rd_index_new));
 
         wr_index = rd_index_old >> 24;
-        ret      = dlist_insert(this->dlists[wr_index], index, data);
+        ret      = dlist_insert(thiz->dlists[wr_index], index, data);
     }
 
     return ret;
 }
 
-Ret swmr_dlist_delete(Swmrd_list *this, size_t index)
+Ret swmr_dlist_delete(Swmrd_list *thiz, size_t index)
 {
     Ret ret          = RET_FAIL;
     d_list *wr_dlist = NULL;
-    return_val_if_fail(this != NULL && this->dlists != NULL, ret);
+    return_val_if_fail(thiz != NULL && thiz->dlists != NULL, ret);
 
-    size_t wr_index = !((this->rd_index_and_ref.counter >> 24) & 0x1);
-    if ((ret = dlist_delete(this->dlists[wr_index], index)) == RET_OK) {
-        int rd_index_old = this->rd_index_and_ref.counter & 0xFF000000;
+    size_t wr_index = !((thiz->rd_index_and_ref.counter >> 24) & 0x1);
+    if ((ret = dlist_delete(thiz->dlists[wr_index], index)) == RET_OK) {
+        int rd_index_old = thiz->rd_index_and_ref.counter & 0xFF000000;
         int rd_index_new = wr_index << 24;
 
         do {
             usleep(100);
-        } while (CAS(&(this->rd_index_and_ref), rd_index_old, rd_index_new));
+        } while (CAS(&(thiz->rd_index_and_ref), rd_index_old, rd_index_new));
 
         wr_index = rd_index_old >> 24;
-        ret      = dlist_delete(this->dlists[wr_index], index);
+        ret      = dlist_delete(thiz->dlists[wr_index], index);
     }
 
     return ret;

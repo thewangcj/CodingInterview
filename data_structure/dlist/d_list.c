@@ -4,12 +4,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct d_list_node_t
+struct d_list_node_t
 {
     struct d_list_node_t *prev;
     struct d_list_node_t *next;
     void *data;
-} d_list_node;
+};
 
 struct d_list_t
 {
@@ -17,7 +17,6 @@ struct d_list_t
     void *data_destroy_ctx;
     data_destroy_func data_destroy;
 };
-typedef struct d_list_t d_list;
 
 /*
  * 创建一个双向链表
@@ -33,37 +32,37 @@ d_list *dlist_create(data_destroy_func data_destroy, void *ctx)
     return list;
 }
 
-static void dlist_destroy_data(d_list *this, void *data)
+static void dlist_destroy_data(d_list *thiz, void *data)
 {
-    if (this->data_destroy != NULL) {
-        this->data_destroy(this->data_destroy_ctx, data);
+    if (thiz->data_destroy != NULL) {
+        thiz->data_destroy(thiz->data_destroy_ctx, data);
     }
 }
 
-static void dlist_node_destroy(d_list *this, d_list_node *node)
+static void dlist_node_destroy(d_list *thiz, d_list_node *node)
 {
     if (node != NULL) {
         node->next = NULL;
         node->prev = NULL;
-        dlist_destroy_data(this, node->data);
+        dlist_destroy_data(thiz, node->data);
         free(node);
     }
 
     return;
 }
 
-void dlist_destroy(d_list *this)
+void dlist_destroy(d_list *thiz)
 {
-    d_list_node *iter = this->first;
+    d_list_node *iter = thiz->first;
     d_list_node *next = NULL;
 
     while (iter != NULL) {
         next = iter->next;
-        dlist_node_destroy(this, iter);
+        dlist_node_destroy(thiz, iter);
         iter = next;
     }
-    this->first = NULL;
-    free(this);
+    thiz->first = NULL;
+    free(thiz);
     return;
 }
 
@@ -82,14 +81,14 @@ static d_list_node *dlist_node_create(void *data)
 }
 
 /// 获取 index (0开始)位置的结点
-/// \param this 链表
+/// \param thiz 链表
 /// \param index 索引
 /// \param fail_return_last 决定当 index 超出链表长度时是返回最后一个还是 NULL
 /// \return
-static d_list_node *dlist_get_node(d_list *this, size_t index,
+static d_list_node *dlist_get_node(d_list *thiz, size_t index,
                                    int fail_return_last)
 {
-    d_list_node *iter = this->first;
+    d_list_node *iter = thiz->first;
 
     while (iter != NULL && iter->next != NULL && index > 0) {
         iter = iter->next;
@@ -103,9 +102,9 @@ static d_list_node *dlist_get_node(d_list *this, size_t index,
     return iter;
 }
 
-D_LIST_RET dlist_insert(d_list *this, size_t index, void *data)
+D_LIST_RET dlist_insert(d_list *thiz, size_t index, void *data)
 {
-    return_val_if_fail((this != NULL), DLIST_RET_INVALID_PARAMS);
+    return_val_if_fail((thiz != NULL), DLIST_RET_INVALID_PARAMS);
     d_list_node *cursor = NULL;
     d_list_node *node   = NULL;
 
@@ -114,16 +113,16 @@ D_LIST_RET dlist_insert(d_list *this, size_t index, void *data)
     }
 
     // 链表为空，还没有元素
-    if (this->first == NULL) {
-        this->first = node;
+    if (thiz->first == NULL) {
+        thiz->first = node;
         return DLIST_RET_OK;
     }
 
-    cursor = dlist_get_node(this, index, 1);
+    cursor = dlist_get_node(thiz, index, 1);
 
-    if (index < dlist_length(this)) {
-        if (this->first == cursor) {
-            this->first = node;
+    if (index < dlist_length(thiz)) {
+        if (thiz->first == cursor) {
+            thiz->first = node;
         } else {
             cursor->prev->next = node;
             node->prev         = cursor->prev;
@@ -138,24 +137,24 @@ D_LIST_RET dlist_insert(d_list *this, size_t index, void *data)
     return DLIST_RET_OK;
 }
 
-D_LIST_RET dlist_prepend(d_list *this, void *data)
+D_LIST_RET dlist_prepend(d_list *thiz, void *data)
 {
-    return dlist_insert(this, 0, data);
+    return dlist_insert(thiz, 0, data);
 }
 
-D_LIST_RET dlist_append(d_list *this, void *data)
+D_LIST_RET dlist_append(d_list *thiz, void *data)
 {
-    return dlist_insert(this, -1, data);
+    return dlist_insert(thiz, -1, data);
 }
 
-D_LIST_RET dlist_delete(d_list *this, size_t index)
+D_LIST_RET dlist_delete(d_list *thiz, size_t index)
 {
-    return_val_if_fail((this != NULL), DLIST_RET_INVALID_PARAMS);
-    d_list_node *cursor = dlist_get_node(this, index, 0);
+    return_val_if_fail((thiz != NULL), DLIST_RET_INVALID_PARAMS);
+    d_list_node *cursor = dlist_get_node(thiz, index, 0);
 
     if (cursor != NULL) {
-        if (cursor == this->first) {
-            this->first = cursor->next;
+        if (cursor == thiz->first) {
+            thiz->first = cursor->next;
         }
 
         if (cursor->next != NULL) {
@@ -166,16 +165,16 @@ D_LIST_RET dlist_delete(d_list *this, size_t index)
             cursor->prev->next = cursor->next;
         }
 
-        dlist_node_destroy(this, cursor);
+        dlist_node_destroy(thiz, cursor);
     }
 
     return DLIST_RET_OK;
 }
 
-D_LIST_RET dlist_get_by_index(d_list *this, size_t index, void **data)
+D_LIST_RET dlist_get_by_index(d_list *thiz, size_t index, void **data)
 {
-    return_val_if_fail((this != NULL), DLIST_RET_INVALID_PARAMS);
-    d_list_node *cursor = dlist_get_node(this, index, 0);
+    return_val_if_fail((thiz != NULL), DLIST_RET_INVALID_PARAMS);
+    d_list_node *cursor = dlist_get_node(thiz, index, 0);
     if (cursor != NULL) {
         *data = cursor->data;
         return DLIST_RET_OK;
@@ -184,10 +183,10 @@ D_LIST_RET dlist_get_by_index(d_list *this, size_t index, void **data)
     ;
 }
 
-D_LIST_RET dlist_set_by_index(d_list *this, size_t index, void *data)
+D_LIST_RET dlist_set_by_index(d_list *thiz, size_t index, void *data)
 {
-    return_val_if_fail((this != NULL), DLIST_RET_INVALID_PARAMS);
-    d_list_node *cursor = dlist_get_node(this, index, 0);
+    return_val_if_fail((thiz != NULL), DLIST_RET_INVALID_PARAMS);
+    d_list_node *cursor = dlist_get_node(thiz, index, 0);
     if (cursor != NULL) {
         cursor->data = data;
         return DLIST_RET_OK;
@@ -197,13 +196,13 @@ D_LIST_RET dlist_set_by_index(d_list *this, size_t index, void *data)
 }
 
 /// 返回链表的长度
-/// \param this
+/// \param thiz
 /// \return
-size_t dlist_length(d_list *this)
+size_t dlist_length(d_list *thiz)
 {
-    if (this == NULL) return 0;
+    if (thiz == NULL) return 0;
     size_t len        = 0;
-    d_list_node *iter = this->first;
+    d_list_node *iter = thiz->first;
     while (iter != NULL) {
         len++;
         iter = iter->next;
@@ -211,13 +210,13 @@ size_t dlist_length(d_list *this)
     return len;
 }
 
-int dlist_find(d_list *this, data_cmp_fun cmp, void *ctx)
+int dlist_find(d_list *thiz, data_cmp_fun cmp, void *ctx)
 {
-    return_val_if_fail((this != NULL), DLIST_RET_INVALID_PARAMS);
+    return_val_if_fail((thiz != NULL), DLIST_RET_INVALID_PARAMS);
     int i             = 0;
     d_list_node *iter = NULL;
 
-    iter = this->first;
+    iter = thiz->first;
     while (iter != NULL) {
         if (cmp(ctx, iter->data) == 0) {
             break;
@@ -229,9 +228,9 @@ int dlist_find(d_list *this, data_cmp_fun cmp, void *ctx)
     return i;
 }
 
-D_LIST_RET dlist_print(d_list *this, d_list_data_print_fun print)
+D_LIST_RET dlist_print(d_list *thiz, d_list_data_print_fun print)
 {
-    d_list_node *iter = this->first;
+    d_list_node *iter = thiz->first;
 
     while (iter != NULL) {
         print(iter->data);
@@ -242,10 +241,10 @@ D_LIST_RET dlist_print(d_list *this, d_list_data_print_fun print)
     return DLIST_RET_OK;
 }
 
-D_LIST_RET dlist_foreach(d_list *this, d_list_data_visit_fun visit, void *ctx)
+D_LIST_RET dlist_foreach(d_list *thiz, d_list_data_visit_fun visit, void *ctx)
 {
-    return_val_if_fail((this != NULL), DLIST_RET_INVALID_PARAMS);
-    d_list_node *iter = this->first;
+    return_val_if_fail((thiz != NULL), DLIST_RET_INVALID_PARAMS);
+    d_list_node *iter = thiz->first;
     D_LIST_RET ret    = DLIST_RET_OK;
     while (iter != NULL && ret == DLIST_RET_OK) {
         ret  = visit(ctx, iter->data);

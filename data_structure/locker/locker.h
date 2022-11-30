@@ -18,9 +18,9 @@ DECLS_BEGIN
 struct _Locker;
 typedef struct _Locker Locker;
 
-typedef Ret (*LockerLockFunc)(Locker *this);
-typedef Ret (*LockerUnlockFunc)(Locker *this);
-typedef void (*LockerDestroyFunc)(Locker *this);
+typedef Ret (*LockerLockFunc)(Locker *thiz);
+typedef Ret (*LockerUnlockFunc)(Locker *thiz);
+typedef void (*LockerDestroyFunc)(Locker *thiz);
 
 struct _Locker
 {
@@ -31,26 +31,26 @@ struct _Locker
     char priv[0];
 };
 
-static inline Ret locker_lock(Locker *this)
+static inline Ret locker_lock(Locker *thiz)
 {
-    return_val_if_fail(this != NULL && this->lock != NULL, RET_INVALID_PARAMS);
+    return_val_if_fail(thiz != NULL && thiz->lock != NULL, RET_INVALID_PARAMS);
 
-    return this->lock(this);
+    return thiz->lock(thiz);
 }
 
-static inline Ret locker_unlock(Locker *this)
+static inline Ret locker_unlock(Locker *thiz)
 {
-    return_val_if_fail(this != NULL && this->unlock != NULL,
+    return_val_if_fail(thiz != NULL && thiz->unlock != NULL,
                        RET_INVALID_PARAMS);
 
-    return this->unlock(this);
+    return thiz->unlock(thiz);
 }
 
-static inline void locker_destroy(Locker *this)
+static inline void locker_destroy(Locker *thiz)
 {
-    return_if_fail(this != NULL && this->destroy != NULL);
+    return_if_fail(thiz != NULL && thiz->destroy != NULL);
 
-    this->destroy(this);
+    thiz->destroy(thiz);
 
     return;
 }

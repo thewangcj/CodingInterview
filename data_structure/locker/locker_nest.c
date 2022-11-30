@@ -8,10 +8,10 @@ typedef struct _PrivInfo
 	TaskSelfFunc task_self;
 }PrivInfo;
 
-static Ret  locker_nest_lock(Locker* this)
+static Ret  locker_nest_lock(Locker* thiz)
 {
 	Ret ret = RET_OK;
-	PrivInfo* priv = (PrivInfo*)this->priv;
+	PrivInfo* priv = (PrivInfo*)thiz->priv;
 
 	if(priv->owner == priv->task_self())
 	{
@@ -29,10 +29,10 @@ static Ret  locker_nest_lock(Locker* this)
 	return ret;
 }
 
-static Ret  locker_nest_unlock(Locker* this)
+static Ret  locker_nest_unlock(Locker* thiz)
 {
 	Ret ret = RET_OK;
-	PrivInfo* priv = (PrivInfo*)this->priv;
+	PrivInfo* priv = (PrivInfo*)thiz->priv;
 
 	return_val_if_fail(priv->owner == priv->task_self(), RET_FAIL);
 	
@@ -46,34 +46,34 @@ static Ret  locker_nest_unlock(Locker* this)
 	return ret;
 }
 
-static void  locker_nest_destroy(Locker* this)
+static void  locker_nest_destroy(Locker* thiz)
 {
-	PrivInfo* priv = (PrivInfo*)this->priv;
+	PrivInfo* priv = (PrivInfo*)thiz->priv;
 
 	priv->owner = 0;
 	priv->refcount = 0;
 	locker_destroy(priv->real_locker);
 	priv->real_locker = NULL;
 
-	SAFE_FREE(this);
+	SAFE_FREE(thiz);
 
 	return;
 }
 
 Locker* locker_nest_create(Locker* real_locker, TaskSelfFunc task_self)
 {
-	Locker* this = NULL;
+	Locker* thiz = NULL;
 	return_val_if_fail(real_locker != NULL && task_self != NULL, NULL);
 	
-	this = (Locker*)malloc(sizeof(Locker) + sizeof(PrivInfo));
+	thiz = (Locker*)malloc(sizeof(Locker) + sizeof(PrivInfo));
 
-	if(this != NULL)
+	if(thiz != NULL)
 	{
-		PrivInfo* priv = (PrivInfo*)this->priv;
+		PrivInfo* priv = (PrivInfo*)thiz->priv;
 
-		this->lock    = locker_nest_lock;
-		this->unlock  = locker_nest_unlock;
-		this->destroy = locker_nest_destroy;
+		thiz->lock    = locker_nest_lock;
+		thiz->unlock  = locker_nest_unlock;
+		thiz->destroy = locker_nest_destroy;
 
 		priv->owner = 0;
 		priv->refcount = 0;
@@ -81,6 +81,6 @@ Locker* locker_nest_create(Locker* real_locker, TaskSelfFunc task_self)
 		priv->task_self = task_self;
 	}
 
-	return this;
+	return thiz;
 }
 

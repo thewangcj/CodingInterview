@@ -19,79 +19,79 @@ struct _RwLocker
 
 RwLocker *rw_locker_create(Locker *rw_locker, Locker *rd_locker)
 {
-    RwLocker *this = NULL;
+    RwLocker *thiz = NULL;
     return_val_if_fail(rw_locker != NULL && rd_locker != NULL, NULL);
 
-    this = (RwLocker *)malloc(sizeof(RwLocker));
-    if (this != NULL) {
-        this->readers   = 0;
-        this->mode      = RW_LOCKER_NONE;
-        this->rw_locker = rw_locker;
-        this->rd_locker = rd_locker;
+    thiz = (RwLocker *)malloc(sizeof(RwLocker));
+    if (thiz != NULL) {
+        thiz->readers   = 0;
+        thiz->mode      = RW_LOCKER_NONE;
+        thiz->rw_locker = rw_locker;
+        thiz->rd_locker = rd_locker;
     }
 
-    return this;
+    return thiz;
 }
 
-Ret rw_locker_wrlock(RwLocker *this)
+Ret rw_locker_wrlock(RwLocker *thiz)
 {
     Ret ret = RET_OK;
-    return_val_if_fail(this != NULL, RET_INVALID_PARAMS);
+    return_val_if_fail(thiz != NULL, RET_INVALID_PARAMS);
 
-    if ((ret = locker_lock(this->rw_locker)) == RET_OK) {
-        this->mode = RW_LOCKER_WR;
+    if ((ret = locker_lock(thiz->rw_locker)) == RET_OK) {
+        thiz->mode = RW_LOCKER_WR;
     }
 
     return ret;
 }
 
-Ret rw_locker_rdlock(RwLocker *this)
+Ret rw_locker_rdlock(RwLocker *thiz)
 {
     Ret ret = RET_OK;
-    return_val_if_fail(this != NULL, RET_INVALID_PARAMS);
+    return_val_if_fail(thiz != NULL, RET_INVALID_PARAMS);
 
-    if ((ret = locker_lock(this->rd_locker)) == RET_OK) {
-        this->readers++;
-        if (this->readers == 1) {
-            ret        = locker_lock(this->rw_locker);
-            this->mode = RW_LOCKER_RD;
+    if ((ret = locker_lock(thiz->rd_locker)) == RET_OK) {
+        thiz->readers++;
+        if (thiz->readers == 1) {
+            ret        = locker_lock(thiz->rw_locker);
+            thiz->mode = RW_LOCKER_RD;
         }
-        locker_unlock(this->rd_locker);
+        locker_unlock(thiz->rd_locker);
     }
 
     return ret;
 }
 
-Ret rw_locker_unlock(RwLocker *this)
+Ret rw_locker_unlock(RwLocker *thiz)
 {
     Ret ret = RET_OK;
-    return_val_if_fail(this != NULL, RET_INVALID_PARAMS);
+    return_val_if_fail(thiz != NULL, RET_INVALID_PARAMS);
 
-    if (this->mode == RW_LOCKER_WR) {
-        this->mode = RW_LOCKER_NONE;
-        ret        = locker_unlock(this->rw_locker);
+    if (thiz->mode == RW_LOCKER_WR) {
+        thiz->mode = RW_LOCKER_NONE;
+        ret        = locker_unlock(thiz->rw_locker);
     } else {
-        assert(this->mode == RW_LOCKER_RD);
-        if ((ret = locker_lock(this->rd_locker)) == RET_OK) {
-            this->readers--;
-            if (this->readers == 0) {
-                this->mode = RW_LOCKER_NONE;
-                ret        = locker_unlock(this->rw_locker);
+        assert(thiz->mode == RW_LOCKER_RD);
+        if ((ret = locker_lock(thiz->rd_locker)) == RET_OK) {
+            thiz->readers--;
+            if (thiz->readers == 0) {
+                thiz->mode = RW_LOCKER_NONE;
+                ret        = locker_unlock(thiz->rw_locker);
             }
-            locker_unlock(this->rd_locker);
+            locker_unlock(thiz->rd_locker);
         }
     }
 
     return ret;
 }
 
-void rw_locker_destroy(RwLocker *this)
+void rw_locker_destroy(RwLocker *thiz)
 {
-    if (this != NULL) {
-        locker_destroy(this->rd_locker);
-        locker_destroy(this->rw_locker);
-        this->rd_locker = this->rw_locker = NULL;
-        SAFE_FREE(this);
+    if (thiz != NULL) {
+        locker_destroy(thiz->rd_locker);
+        locker_destroy(thiz->rw_locker);
+        thiz->rd_locker = thiz->rw_locker = NULL;
+        SAFE_FREE(thiz);
     }
 
     return;
